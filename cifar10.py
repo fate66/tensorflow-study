@@ -1,4 +1,5 @@
 #自定义model层和layer层，自定义模型和神经节点
+#全连接层  
 import tensorflow as tf
 from tensorflow.keras import datasets, layers, optimizers, Sequential, metrics
 
@@ -46,7 +47,7 @@ class MyNetwork(tf.keras.Model):
     # 定义model
     def __init__(self):
         super(MyNetwork, self).__init__()
-
+        # 第一个参数输入，第二个参数输出
         self.fc1 = MyDense(32*32*3, 256)
         self.fc2 = MyDense(256, 256)
         self.fc3 = MyDense(256, 256)
@@ -71,15 +72,15 @@ network = MyNetwork()
 lr=1e-3
 # optimizer 梯度优化 1e-3  或者 1e-2
 # loss 
-# metrics  存储的正确率
+# metrics  实时查看测试的正确率
 network.compile(optimizer=tf.keras.optimizers.Adam(lr),
                 loss=tf.losses.CategoricalCrossentropy(from_logits=True),
                 metrics=['accuracy']
                 )
 # train_db 数据源
 # ecochs 迭代几次
-# validation_data 测试数据集
-# validation_freq ，每训练一次，测试一次
+# validation_data 对模型进行评测的数据集
+# validation_freq ，每训练几（epochs）边，测试一次
 network.fit(train_db, epochs=15, validation_data=test_db, validation_freq=1)
 
 

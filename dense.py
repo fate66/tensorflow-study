@@ -18,6 +18,7 @@ def dense1 () :
 def dense2 () :
     # 实现公式：relu(relu(X@W1+b1)@W2+b2) 
     # 定义多个神经节点
+    # 第一个参数 是 输出，输入 会自动计算，最后一层 的输出得和分类一致，比如 一共是100类 则最后一层的节点输出 就得是100
     model = tf.keras.Sequential([
         keras.layers.Dense(2, activation='relu'),
         keras.layers.Dense(2, activation='relu'),
