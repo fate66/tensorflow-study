@@ -9,38 +9,28 @@ from tensorflow.keras import datasets
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
-def fun1 () :
-    data = pd.read_csv('./data/income.csv')
-    x = data.Education
-    y = data.Income
-    model = tf.keras.Sequential()
-    model.add(tf.keras.layers.Dense(1, input_shape=(1,)))
-    model.summary()
-    model.compile(optimizer='adam', loss='mse')
-    history = model.fit(x, y, epochs=50000)
-    model.predict(pd.Series([20]))
-    return
-
-
 # 变量创建、正态分布（随机数）、创建tensor、数据打乱、根据下标获取数据
 def fun1 () :
     # 变量
     a = tf.constant(1.)
-    print(a, a.numpy(), a.ndim, a.dtype) # ndim 维度
-    b = tf.range([2])
+    # numpy 真实值， ndim 维度，dtype类型
+    print(a, a.numpy(), a.ndim, a.dtype) 
+    # 长度为2 的数组 [0, 1]
+    b = tf.range([2]) 
+    # [0, 1]
     print(b, b.numpy())
+    # 是否是 tensor
     print(tf.is_tensor(a))
 
-    print('tensor 转换类型')
+    # tensor 转换类型
     aa = np.arange(4)
+    # 创建一个tensor
     aa = tf.convert_to_tensor(aa)
-    # 定义一个tensor，并取值
-    print('定义一个tensor', aa.dtype, aa.numpy())
+    #  类型转换
     aa = tf.cast(aa, dtype=tf.float32)
-    print(aa.dtype)
+     # 定义变量，这个类型一般用于储存模型参数
     w = tf.Variable(aa)
-    print(w)
-#    定义一个两行三列 值为1 tensor
+     
     tf.convert_to_tensor(np.ones([2, 3]))
     tf.convert_to_tensor(np.zeros([3,3]))
 
@@ -55,7 +45,7 @@ def fun1 () :
     tf.zeros(a.shape)
     tf.zeros_like(a)
 
-# 将参数作为形状
+   # 将参数作为形状
     tf.zeros([1])
     tf.ones(1)
 
@@ -85,10 +75,10 @@ def fun1 () :
 # 根据下标取值
 def fun3 () :
     a = tf.random.normal([4, 28, 28, 3])
-    # 根据索引 获取第一张、第三列数据 (28, 3)
+    # 根据索引 获取第一维下标为1、第二维下标为2 (28, 3)
     print(a[1, 2].shape)
 
-    #  切片，从下标为2开始截取，到 下标为3结束 某一段数据 (2, 28, 28, 3)
+    #  切片，从下标为1开始截取，到 下标为3结束 某一段数据 (2, 28, 28, 3)
     print(a[1:3].shape)
  #  切片，从下标为倒数第一个开始截取，一直截取到最后一个 一段数据 (1, 28, 28, 3) 冒号后面什么都不写意思就是截取到最后一位
     print(a[-1:].shape)
@@ -184,7 +174,7 @@ def fun4 ():
 
     return
 
-
+# tensor 合并 新增一个维度 切割维度
 def fun5 () :
     # tensor 合并
     a = tf.ones([4, 35, 8])
@@ -208,7 +198,7 @@ def fun5 () :
     aa, bb = tf.split(c, axis = 1,  num_or_size_splits = [1, 3])
     print(aa.shape, bb.shape)
     return 
-
+# 向量 范数  最大值索引 排序 返回最大值
 def fun6 () :
 #  向量 范数
   # 张量的二范数，一个矩阵[2, 2]，他的二范数就是 各个元素平方之和相加，最后再开平方
@@ -246,21 +236,6 @@ def fun6 () :
   print(res.values)
   return
 
-
-def fun2 () :
-    (x, y), _ = datasets.mnist.load_data()
-    z = []
-    for num in y :
-        num = num.astype(np.int32)
-        z.append(num) 
-    x = tf.convert_to_tensor(x, dtype=tf.float32) / 255.
-    z = tf.convert_to_tensor(z, dtype=tf.int32)
-    print('----------------------------------')
-
-    print(x.shape, z)
-    print(tf.reduce_min(x), tf.reduce_max(x))
-    print(tf.reduce_min(z), tf.reduce_max(z))
-    return 
 print(tf.__version__)
 fun6()
 
