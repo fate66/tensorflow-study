@@ -2,6 +2,7 @@
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import datasets, layers, optimizers, Sequential, metrics
+tf.random.set_seed(2345)
 
 def preprocess(x, y) :
     # x 数据集可以调整为 [-1, 1]
@@ -18,7 +19,7 @@ y_test = tf.one_hot(y_test, depth=10) # [10k, 10]
 y_train = tf.one_hot(y_train, depth=10)
 
 print('datasets:', x_train.shape, y_train.shape, x_test.shape, y_test.shape, tf.reduce_max(x_train), tf.reduce_min(x_train))
-print(y_test)
+# print(y_test)
 
 train_db = tf.data.Dataset.from_tensor_slices((x_train,y_train))
 train_db = train_db.map(preprocess).shuffle(10000).batch(128)
@@ -33,21 +34,27 @@ print('batch_val', sample[0], sample[1])
 
 # 定义卷积层，64 为通道数 kernel_size（观察点） 一般为 [1, 1] [3, 3] [5, 5]
 # padding same 自动添加0  保证输出 与 输出 的 size相同
+
 conv_layers = [
     #unit 1 [b, 32, 32, 3] -> [b, 16, 16, 64]
     layers.Conv2D(64, kernel_size=3, strides=2, padding="same", activation=tf.nn.relu),
+    layers.Dropout(0.5),
     #unit 2  [b, 16, 16, 64] -> [b, 8, 8, 128]
     layers.Conv2D(128, kernel_size=3, strides=2,padding="same", activation=tf.nn.relu),
+    layers.Dropout(0.5),
     # 降维， 会将输入的size缩小2，  [b, 8, 8, 128] -> [b, 4, 4, 128]
     layers.MaxPool2D(pool_size=2, strides=2, padding='same'),
 
     #unit 5  [b, 4, 4, 128] -> [b, 2, 2, 256]
     layers.Conv2D(256, kernel_size=3, strides=2, padding="same", activation=tf.nn.relu),
+    layers.Dropout(0.5),
     # 降维， 会将输入的size缩小2， [b,  2, 2, 256] -> [b,  1, 1, 256]
     layers.MaxPool2D(pool_size=2, strides=2, padding='same'),
     # 摊平
     layers.Flatten(),
     layers.Dense(128, activation=tf.nn.relu),
+
+    layers.Dropout(0.5),
     # 最后一个节点的输出必须和分类一致
     # 逻辑回归 
     layers.Dense(10)
@@ -60,18 +67,21 @@ model.summary()
 # optimizer 梯度优化 1e-3  或者 1e-2
 # loss 
 # metrics  实时查看测试的正确率
-model.compile(optimizer=tf.keras.optimizers.Adam(1e-3),
+model.compile(optimizer=tf.keras.optimizers.Adam(1e-2),
                 loss=tf.losses.CategoricalCrossentropy(from_logits=True),
                 metrics=['accuracy']
                 )
-history = model.fit(train_db, epochs=500, validation_data=test_db, validation_freq=1)
+
+model.load_weights('ckpt/weights.ckpt')
+
+history = model.fit(train_db, epochs=20, validation_data=test_db, validation_freq=1)
 
 # 再次测试模型
-# model.evaluate(test_db)
+model.evaluate(test_db)
 #保存 训练时使用
-# model.save_weights('ckpt/weights.ckpt')
+model.save_weights('ckpt/weights.ckpt')
 # tf.saved_model.save(model, './model')
-model.save('my_model')
+# model.save('my_model')
 # print('saved to my_model')
 
 # reconstructed_model = keras.models.load_model("my_model")

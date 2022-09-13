@@ -5,8 +5,8 @@ from tensorflow.keras import datasets, layers, optimizers, Sequential, metrics
 
 def preprocess(x, y) :
     # x 数据集可以调整为 [-1, 1]
-    x = 2 * tf.cast(tf.convert_to_tensor(x), dtype=tf.float32) / 255. - 1.
-    # x = tf.cast(x, dtype=tf.float32) / 255.
+    # x = 2 * tf.cast(tf.convert_to_tensor(x), dtype=tf.float32) / 255. - 1.
+    x = tf.cast(x, dtype=tf.float32) / 255.
     y = tf.cast(y, dtype=tf.int32)
     return x, y
 
@@ -36,7 +36,8 @@ model = tf.keras.applications.resnet.ResNet101(
     input_tensor=None,
     input_shape=(32, 32, 3),
     pooling=None,
-    classes=10)
+    classes=10,
+    classifier_activation="softmax",)
 
 model.build(input_shape=[None, 32, 32, 3])
 model.summary()
@@ -44,11 +45,11 @@ model.summary()
 # optimizer 梯度优化 1e-3  或者 1e-2
 # loss 
 # metrics  实时查看测试的正确率
-model.compile(optimizer=tf.keras.optimizers.Adam(1e-3),
+model.compile(optimizer=tf.keras.optimizers.Adam(1e-4),
                 loss=tf.losses.CategoricalCrossentropy(),
                 metrics=['accuracy']
                 )
-history = model.fit(train_db, epochs=500, validation_data=test_db, validation_freq=1)
+history = model.fit(train_db, epochs=5, validation_data=test_db, validation_freq=1)
 
 # 再次测试模型
 # model.evaluate(test_db)
