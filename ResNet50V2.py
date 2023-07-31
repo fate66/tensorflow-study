@@ -1,4 +1,3 @@
-#  10 个时尚类别的 60,000 个 28x28 灰度图像的数据集，以及一个包含 10,000 个图像的测试集
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import datasets, layers, optimizers, Sequential, metrics

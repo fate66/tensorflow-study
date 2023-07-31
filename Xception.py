@@ -5,7 +5,8 @@ from tensorflow.keras import datasets, layers, optimizers, Sequential, metrics
 import matplotlib.pyplot as plt
 
 
-#[60k,28,28,3]  [60k]
+# [60k,28,28,3]  [60k]
+# [60k,28,28,3]  [60k]
 (x_train, y_train), (x_test, y_test) = tf.keras.datasets.boston_housing.load_data()
 # y_test = tf.squeeze(y_test)
 # y_train = tf.squeeze(y_train)

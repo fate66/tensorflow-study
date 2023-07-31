@@ -11,7 +11,7 @@ def load_img(dir, outDir, name):
         image=input_arr, target_height=400, target_width=400)
     if not os.path.exists(outDir):
         os.makedirs(outDir)
-    tf.keras.utils.save_img(outDir+name, x=out)
+    tf.keras.utils.save_img(outDir + name, x=out)
 
 
 def down(list, dir):
@@ -116,6 +116,33 @@ def philatelic10000_2():
         down(load_dict, 'philatelic')
 
 
+
+
+
+
+# 瓷器2次分类
+
+# 下载瓷器分类
+def down2philatelicAll(data, base_directory):
+    for index, obj in enumerate(data):
+        print(f"处理lot:{index}")
+        for index, url in enumerate(obj['list']):
+
+            path_to_downloaded_file = tf.keras.utils.get_file(
+                fname=str(index)+'.jpg',
+                origin= url,
+                cache_subdir=str(obj['lot']),
+                cache_dir=base_directory
+            )
+            load_img(base_directory +str(obj['lot']) + '/'  , base_directory + 'datasets/' + str(obj['lot']) + '/', str(index)+'.jpg')
+
+def philatelicAll():
+    with open("./data2/philatelicAll.json", 'r') as load_f:
+        data = json.load(load_f)
+        down2philatelicAll(data, '/Volumes/My Passport/tensorflow-study/data2/')
+
+philatelicAll()
+
 # jewellery5000()
 # jade10000()
 # tea70_2()
@@ -213,4 +240,4 @@ def sortEqual():
             print(s)
 
 
-sortEqual()
+# sortEqual()

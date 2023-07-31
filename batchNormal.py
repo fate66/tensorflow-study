@@ -1,4 +1,5 @@
 
+# 可以解决 当卷积层堆叠过多时导致的 精度下降问题
 import tensorflow as tf
 from tensorflow.keras import datasets, layers, optimizers, Sequential, metrics
 
